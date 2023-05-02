@@ -16,6 +16,7 @@ class Jogo
         $nome = readLine();
         return $nome;
     }
+  
     protected function escolherCanto()
     {
         echo "\n";
@@ -35,15 +36,28 @@ class Jogo
         $canto = readLine();
         return $canto;
     }
+  
+    protected function exibirGanhador($vdd)
+    {
 
+		if ($vdd) {
+		echo("      PARABÉNS VOCÊ GANHOU         \n");
+		
+		} else {
+
+		echo("      VOCÊ PERDEU       \n");
+		}
+	     }
+  
     protected function exibirGol($gol)
     {
-        if ($gol == true) {
+        if ($gol) {
             echo "GOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOLLL\n\n";
         } else {
             echo "DEFEEEEEEEEEEEEEENDEEEEEEEUUUUUUUU\n\n";
         }
     }
+  
     protected function escolherNivel()
     {
         echo "\n";
@@ -97,7 +111,7 @@ class Jogo
     {
         $gol = true;
 
-        if ($goleiro == $$cantoSelecionado) {
+        if ($goleiro == $cantoSelecionado) {
             $gol = false;
         }
 
@@ -106,17 +120,24 @@ class Jogo
 
     public function modoSolo(): void
     {
-        //Animacao::inicializacaoModoSolo();
+        Animacao::inicializacaoModoSolo();
 
         $usuario = new Usuario($this->nome());
-      
-        do {
-            $usuario->setNivel($this->escolherNivel());
 
-            if ($usuario->getNivel() > 3 || $usuario->getNivel() < 1) {
+       $usuario->setNivel($this->escolherNivel());
+
+      do {
+        
+           if ($usuario->getNivel() > 3 || $usuario->getNivel() < 1) {
                 echo "Opcão Inválida\n";
             }
-          
+        
+         } while($usuario->getNivel() > 3 || $usuario->getNivel() < 1);
+
+            
+      
+        do {
+           
            do{
 
              
@@ -141,7 +162,7 @@ class Jogo
 
             $this->gol = $this->verificarGol($this->goleiro,$usuario->getCantoSelecionado());
 
-            $this->exibirGol($gol);
+            $this->exibirGol($this->gol);
 
             if ($this->gol == true) {
                 $this->placarJogador++;
@@ -151,19 +172,20 @@ class Jogo
 
           echo $usuario->getNome() ." " .$this->placarJogador . " x " ." " .$this->placarGoleiro." Goleiro\n";
 
-          echo "Você chutou no: " .$usuario->getCantoSelecionado() ." Goleiro pulou: " .$this->goleiro. "\n";
+          echo "Você chutou no: " .$usuario->getCantoSelecionado() ." Goleiro pulou no: " .$this->goleiro. "\n\n";
 
           if($this->placarGoleiro >= 5){
+            $this->exibirGanhador(false);
             break;
           }
           if($this->placarJogador >= 5){
+            $this->exibirGanhador(true);
             break;
           }
 
-          echo "Deseja continuar? ";
-          $this->JogarNovamente = readLine();
-        }while(!(strcasecmp("s", $this->jogarNovamente) == 0));
+          echo "Deseja continuar? (s/n) ";
+          $jogarNovamente = readLine();
+        }while($jogarNovamente != "n");
     }
 }
-$jogo = new Jogo();
-$jogo->modoSolo();
+
